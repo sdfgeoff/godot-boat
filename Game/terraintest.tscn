@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://boats/cutter/cutter.tscn" type="PackedScene" id=1]
+[ext_resource path="res://terrain/terrain.tscn" type="PackedScene" id=2]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Spatial" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.996779, -0.0801989, 0, 0.0801989, 0.996779, 0, 0, 0, 1, -25.1397, 17.1448, 115.899 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.984474, 0, 0.175533, 0, 1, 0, -0.175533, 0, 0.984474, 6.60051, 35.3697, 155.145 )
+far = 2000.0
+
+[node name="Spatial2" parent="." instance=ExtResource( 2 )]
+
+[node name="Camera2" type="Camera" parent="."]
+transform = Transform( 0.967184, -0.000298092, 0.254075, -0.0242108, 0.995341, 0.0933307, -0.252919, -0.0964193, 0.962671, 52.7408, 48.3614, 246.875 )
+current = true
+fov = 30.0
+far = 2000.0
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.905222, 0.424939, 0, -0.424939, 0.905222, 0, 59, 17 )
+light_energy = 0.3
+
+[node name="Camera3" type="Camera" parent="."]
+transform = Transform( -0.649485, -0.250835, 0.71781, -0.0554671, 0.957136, 0.284279, -0.758349, 0.14482, -0.635558, 22.5139, 49.3967, 105.028 )
+far = 2000.0

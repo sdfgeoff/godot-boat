@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://boats/sail_noise.png" type="Texture" id=1]
+[ext_resource path="res://boats/cutter/sail_displacement.png" type="Texture" id=2]
+[ext_resource path="res://boats/sail.shader" type="Shader" id=3]
+
+[resource]
+shader = ExtResource( 3 )
+shader_param/belly = -5.0
+shader_param/luff = 5.0
+shader_param/luff_position = 0.0
+shader_param/normal_sample_delta = 0.02
+shader_param/noise_tex = ExtResource( 1 )
+shader_param/sail_tex = ExtResource( 2 )

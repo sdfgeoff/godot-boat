@@ -1,0 +1,57 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=2]
+
+[ext_resource path="res://terrain/terrain_height.png" type="Texture" id=1]
+[ext_resource path="res://terrain/terrain_normal.png" type="Texture" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+
+
+uniform sampler2D heightmap: hint_albedo;
+uniform sampler2D normalmap: hint_normal;
+uniform sampler2D col_ramp: hint_albedo;
+
+varying vec2 sample_pos;
+
+
+vec4 sample_heights(vec2 position){
+	return vec4(
+		texture(normalmap, position).rgb,
+		texture(heightmap, position).r
+	);
+}
+
+
+void vertex(){
+	vec4 world_space = WORLD_MATRIX * vec4(VERTEX, 1.0);
+	sample_pos = world_space.xz / 2020.0 + vec2(0.5);
+	vec4 height = sample_heights(sample_pos);
+	VERTEX.y += pow(height.w, 1.0/2.2) * 100.0;
+	NORMAL = height.rgb;
+}
+
+void fragment(){
+	vec4 sample = sample_heights(sample_pos);
+	NORMALMAP = sample.rgb;
+	
+	float altitude = pow(sample.a, 1.0/2.2);
+	altitude -= length(vec2(0.5) - sample.rg) * 0.2;
+	ALBEDO = texture(col_ramp, vec2(altitude)).rgb;//vec3(sample.a);
+	ROUGHNESS = 1.0;
+	SPECULAR = 0.3;
+	METALLIC = 0.1;
+}"
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.219512, 0.398374 )
+colors = PoolColorArray( 0.0194525, 0.0478831, 0, 1, 0.0603027, 0.148438, 0, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+width = 256
+
+[resource]
+shader = SubResource( 1 )
+shader_param/heightmap = ExtResource( 1 )
+shader_param/normalmap = ExtResource( 2 )
+shader_param/col_ramp = SubResource( 3 )

@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+Import('env')
+Import('env_modules')
+
+env_mono = env_modules.Clone()
+
+env_mono.add_source_files(env.modules_sources, '*.cpp')
+env_mono.add_source_files(env.modules_sources, 'glue/*.cpp')
+env_mono.add_source_files(env.modules_sources, 'mono_gd/*.cpp')
+env_mono.add_source_files(env.modules_sources, 'utils/*.cpp')
+
+if env['tools']:
+    env_mono.add_source_files(env.modules_sources, 'editor/*.cpp')
+    # NOTE: It is safe to generate this file here, since this is still executed serially
+    import build_scripts.make_cs_compressed_header as make_cs_compressed_header
+    make_cs_compressed_header.generate_header(
+        'glue/Managed/Files',
+        'glue/cs_compressed.gen.h',
+        'glue/cs_glue_version.gen.h'
+    )
+
+vars = Variables()
+vars.Add(BoolVariable('mono_glue', 'Build with the mono glue sources', True))
+vars.Add(BoolVariable('xbuild_fallback', 'If MSBuild is not found, fallback to xbuild', False))
+vars.Update(env_mono)
+
+# Glue sources
+if env_mono['mono_glue']:
+    env_mono.Append(CPPDEFINES=['MONO_GLUE_ENABLED'])
+
+    import os.path
+    if not os.path.isfile('glue/mono_glue.gen.cpp'):
+        raise RuntimeError('Missing mono glue sources. Did you forget to generate them?')
+
+if env_mono['tools'] or env_mono['target'] != 'release':
+    env_mono.Append(CPPDEFINES=['GD_MONO_HOT_RELOAD'])
+
+# Configure Thread Local Storage
+
+import build_scripts.tls_configure as tls_configure
+
+conf = Configure(env_mono)
+tls_configure.configure(conf)
+env_mono = conf.Finish()
+
+# Configure Mono
+
+import build_scripts.mono_configure as mono_configure
+
+mono_configure.configure(env, env_mono)
+
+# Build GodotSharpTools
+
+import build_scripts.godotsharptools_build as godotsharptools_build
+
+godotsharptools_build.build(env_mono)

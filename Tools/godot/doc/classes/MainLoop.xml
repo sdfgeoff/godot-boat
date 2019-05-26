@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="MainLoop" inherits="Object" category="Core" version="3.2">
+	<brief_description>
+		Main loop is the abstract main loop base class.
+	</brief_description>
+	<description>
+		Main loop is the abstract main loop base class. All other main loop classes are derived from it. Upon application start, a [MainLoop] has to be provided to OS, else the application will exit. This happens automatically (and a [SceneTree] is created), unless a main [Script] is supplied, which may or not create and return a [MainLoop].
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="_drop_files" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<argument index="0" name="files" type="PoolStringArray">
+			</argument>
+			<argument index="1" name="screen" type="int">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_finalize" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<description>
+				Called before the program exits.
+			</description>
+		</method>
+		<method name="_idle" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<argument index="0" name="delta" type="float">
+			</argument>
+			<description>
+				Called each idle frame with time since last call as an only argument.
+			</description>
+		</method>
+		<method name="_initialize" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<description>
+				Called once during initialization.
+			</description>
+		</method>
+		<method name="_input_event" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<argument index="0" name="event" type="InputEvent">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_input_text" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<argument index="0" name="text" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="_iteration" qualifiers="virtual">
+			<return type="void">
+			</return>
+			<argument index="0" name="delta" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="finish">
+			<return type="void">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="idle">
+			<return type="bool">
+			</return>
+			<argument index="0" name="delta" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="init">
+			<return type="void">
+			</return>
+			<description>
+			</description>
+		</method>
+		<method name="input_event">
+			<return type="void">
+			</return>
+			<argument index="0" name="event" type="InputEvent">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="input_text">
+			<return type="void">
+			</return>
+			<argument index="0" name="text" type="String">
+			</argument>
+			<description>
+			</description>
+		</method>
+		<method name="iteration">
+			<return type="bool">
+			</return>
+			<argument index="0" name="delta" type="float">
+			</argument>
+			<description>
+			</description>
+		</method>
+	</methods>
+	<constants>
+		<constant name="NOTIFICATION_WM_MOUSE_ENTER" value="1002">
+		</constant>
+		<constant name="NOTIFICATION_WM_MOUSE_EXIT" value="1003">
+		</constant>
+		<constant name="NOTIFICATION_WM_FOCUS_IN" value="1004">
+		</constant>
+		<constant name="NOTIFICATION_WM_FOCUS_OUT" value="1005">
+		</constant>
+		<constant name="NOTIFICATION_WM_QUIT_REQUEST" value="1006">
+		</constant>
+		<constant name="NOTIFICATION_WM_GO_BACK_REQUEST" value="1007">
+		</constant>
+		<constant name="NOTIFICATION_WM_UNFOCUS_REQUEST" value="1008">
+		</constant>
+		<constant name="NOTIFICATION_OS_MEMORY_WARNING" value="1009">
+		</constant>
+		<constant name="NOTIFICATION_TRANSLATION_CHANGED" value="1010">
+		</constant>
+		<constant name="NOTIFICATION_WM_ABOUT" value="1011">
+		</constant>
+		<constant name="NOTIFICATION_CRASH" value="1012">
+		</constant>
+		<constant name="NOTIFICATION_OS_IME_UPDATE" value="1013">
+		</constant>
+	</constants>
+</class>

@@ -1,0 +1,25 @@
+[gd_resource type="Environment" load_steps=3 format=2]
+
+[ext_resource path="res://terrain/env.hdr" type="Texture" id=1]
+
+[sub_resource type="PanoramaSky" id=1]
+panorama = ExtResource( 1 )
+
+[resource]
+background_mode = 2
+background_sky = SubResource( 1 )
+background_energy = 2.0
+ambient_light_energy = 0.95
+ambient_light_sky_contribution = 0.04
+fog_enabled = true
+fog_color = Color( 0.784314, 0.890196, 0.94902, 1 )
+fog_sun_color = Color( 1, 1, 1, 1 )
+fog_sun_amount = 0.42
+fog_depth_end = 1146.9
+tonemap_mode = 2
+ss_reflections_enabled = true
+ss_reflections_max_steps = 16
+ss_reflections_fade_in = 0.395852
+ss_reflections_fade_out = 0.217637
+ss_reflections_depth_tolerance = 0.1
+glow_enabled = true

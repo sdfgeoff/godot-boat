@@ -1,0 +1,98 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://boats/boat.gd" type="Script" id=1]
+[ext_resource path="res://boats/cutter/cutter.escn" type="PackedScene" id=2]
+[ext_resource path="res://trail.png" type="Texture" id=3]
+[ext_resource path="res://boats/cutter/point_north.gd" type="Script" id=4]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.144262, 0.617073, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 0.916504, 0.673113, 0.0966625, 1, 0.0352941, 0.988235, 0.988235, 0.639216, 0, 1, 0.953125, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+width = 128
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0.0698999 ), 0.0, 1.64307, 0, 0, Vector2( 1, 1 ), 3.2276, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.1
+initial_velocity_random = 0.91
+angular_velocity = -1.33555e+20
+scale = 10.0
+scale_random = 0.22
+scale_curve = SubResource( 4 )
+color_ramp = SubResource( 2 )
+
+[sub_resource type="Shader" id=6]
+code = "shader_type spatial;
+render_mode blend_add,depth_draw_opaque,cull_disabled,diffuse_burley,specular_schlick_ggx,unshaded;
+uniform sampler2D texture_albedo : hint_albedo;
+
+varying float id;
+
+void vertex() {
+	id = float(INSTANCE_ID);
+}
+
+void fragment() {
+	vec4 noise = texture(texture_albedo, UV + id / 10.0);
+	float shape = texture(texture_albedo, UV).r;
+	shape = mix(shape, (noise.g + noise.b) * shape, 0.6) ;
+
+	ALBEDO = (COLOR.rgb * shape + pow(shape, 2.0)) * COLOR.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 6 )
+shader_param/texture_albedo = ExtResource( 3 )
+
+[sub_resource type="PlaneMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 4, 2 )
+
+[sub_resource type="CubeMesh" id=9]
+size = Vector3( 0.2, 0.2, 5 )
+
+[sub_resource type="PrismMesh" id=10]
+size = Vector3( 1, 1, 0.2 )
+
+[sub_resource type="BoxShape" id=11]
+extents = Vector3( 1.34832, 1, 5.85721 )
+
+[node name="Spatial" type="RigidBody"]
+script = ExtResource( 1 )
+
+[node name="Visuals" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+
+[node name="Particles" type="Particles" parent="Visuals"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.00160551, -1.13512, -1.90968 )
+amount = 100
+lifetime = 30.0
+visibility_aabb = AABB( -12.4676, -4, -5.64544, 24.9353, 8, 11.2909 )
+local_coords = false
+process_material = SubResource( 5 )
+draw_pass_1 = SubResource( 8 )
+
+[node name="wind" type="MeshInstance" parent="."]
+transform = Transform( 0.527037, 0, 0.849842, 0, 1, 0, -0.849842, 0, 0.527037, 4.82113, 3.2586, 0.70531 )
+mesh = SubResource( 9 )
+material/0 = null
+script = ExtResource( 4 )
+
+[node name="MeshInstance" type="MeshInstance" parent="wind"]
+transform = Transform( 1, 1.78814e-07, 1.78814e-07, -1.78814e-07, -4.37114e-08, 1, 1.78814e-07, -1, -4.37114e-08, 0, 0, -3 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47408, 0 )
+shape = SubResource( 11 )
